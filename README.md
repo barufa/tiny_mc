@@ -24,11 +24,11 @@ Las ejecuciones se realizaron sobre una notebook Asus vivobook S14 con las sigui
 ``
 Sobre este equipo se ejecutó el programa Empirical Roofline Toolkit obteniendo los siguientes resultados:
 
-![Empirical Roofline Toolkit](https://raw.githubusercontent.com/barufa/tiny_mc/main/Imagenes/image9.jpg "Grafico ERT con varios hilo")
+![Empirical Roofline Toolkit](https://raw.githubusercontent.com/barufa/tiny_mc/lab1/Imagenes/image9.jpg "Grafico ERT con varios hilo")
 
 Y al ejecutarlo para un solo hilo nos queda:
 
-![Empirical Roofline Toolkit](https://raw.githubusercontent.com/barufa/tiny_mc/main/Imagenes/image7.jpg "Grafico ERT con un solo hilo")
+![Empirical Roofline Toolkit](https://raw.githubusercontent.com/barufa/tiny_mc/lab1/Imagenes/image7.jpg "Grafico ERT con un solo hilo")
 
 
 ## Métrica utilizada
@@ -67,13 +67,13 @@ este problema.
 En machine learning el método wrapper evalúa subconjuntos de variables para determinar
 una combinación adecuada para el problema que se quiere resolver.
 
-![Metodo de seleccion de variables Wrapper](https://raw.githubusercontent.com/barufa/tiny_mc/main/Imagenes/image3.png "Wrapper")
+![Metodo de seleccion de variables Wrapper](https://raw.githubusercontent.com/barufa/tiny_mc/lab1/Imagenes/image3.png "Wrapper")
 
 Dentro de nuestro problema, las variables son representadas por las distintas banderas del
 compilador y el rendimiento está dado por el archivo binario. Para facilitar la comprensión
 del mismo se proporciona el siguiente ejemplo:
 
-![Espacio de busqueda](https://raw.githubusercontent.com/barufa/tiny_mc/main/Imagenes/image1.png "Espacio de busqueda")
+![Espacio de busqueda](https://raw.githubusercontent.com/barufa/tiny_mc/lab1/Imagenes/image1.png "Espacio de busqueda")
 
 En este caso se trabaja con un espacio de 4 banderas de compilación. El punto inicial es un
 estado que cuenta con todas las banderas habilitadas y en cada paso se trata de quitar una
@@ -97,7 +97,7 @@ ampliamente los tiempos pertinentes a la exploración.
 En el siguiente gráfico podemos ver los resultados obtenidos para las distintas
 combinaciones de banderas de optimización a través del método presentado.
 
-![Comparacion de compiladores](https://raw.githubusercontent.com/barufa/tiny_mc/main/Imagenes/image6.png "Compiladores")
+![Comparacion de compiladores](https://raw.githubusercontent.com/barufa/tiny_mc/lab1/Imagenes/image6.png "Compiladores")
 
 | Compilador | NONE    | O0+     | O1+     | O2+     | O3+     | Ofast+  |
 | ---------- |:-------:| -------:| -------:| -------:| -------:| -------:|
@@ -137,7 +137,7 @@ Por último, es posible notar que el mejor rendimiento usando ICC se alcanzó co
 
 ## Relación lineal entre fotones y tiempo
 
-![Grafico tiempo y cantidad de fotones](https://raw.githubusercontent.com/barufa/tiny_mc/main/Imagenes/image5.png "Grafico tiempo y cantidad de fotones")
+![Grafico tiempo y cantidad de fotones](https://raw.githubusercontent.com/barufa/tiny_mc/lab1/Imagenes/image5.png "Grafico tiempo y cantidad de fotones")
 
 En este gráfico se puede ver que el orden del problema es lineal respecto al número de fotones. Esto es así ya que la memoria requerida por el programa permanece constante a lo largo del mismo y al aumentar la cantidad de fotones solo incrementa el procesamiento.
 
@@ -146,9 +146,9 @@ En este gráfico se puede ver que el orden del problema es lineal respecto al n�
 
 Se ejecutó con la versión original y la versión optimizada del programa con Perf para realizar una comparación entre ellas.
 
-![Imagen Perf Original](https://raw.githubusercontent.com/barufa/tiny_mc/main/Imagenes/image4.png "Imagen Perf Original")
+![Imagen Perf Original](https://raw.githubusercontent.com/barufa/tiny_mc/lab1/Imagenes/image4.png "Imagen Perf Original")
 
-![Imagen Perf Optimizado](https://raw.githubusercontent.com/barufa/tiny_mc/main/Imagenes/image2.png "Imagen Perf Optimizado")
+![Imagen Perf Optimizado](https://raw.githubusercontent.com/barufa/tiny_mc/lab1/Imagenes/image2.png "Imagen Perf Optimizado")
 
 Podemos ver que la mayor diferencia entre las ejecuciones radica en la cantidad de instrucciones ejecutadas, la cual se reduce un 71,66%. Esta reducción se traduce en un decremento en los tiempos de ejecución en un 72,94% y un incremento cercano al 305,13% en el número de fotones procesados por segundo.
 
