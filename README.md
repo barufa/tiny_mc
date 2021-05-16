@@ -12,6 +12,7 @@ El código realiza simulaciones de propagación de luz, a partir de una fuente p
 Las ejecuciones se realizaron sobre una notebook Asus vivobook S14 con las siguiente prestaciones:
 
 ``
+	
 	Ubuntu 18.04.5 LTS
 
 	Kernel 5.4.0-72-generic
@@ -21,6 +22,7 @@ Las ejecuciones se realizaron sobre una notebook Asus vivobook S14 con las sigui
 	16 GB de RAM DDR4 2400 MT/s 64 bits band-width
 
 	Compiladores: GCC 10.1.0 | CLANG 11.1.0 | ICC 2021.2.0
+
 ``
 Sobre este equipo se ejecutó el programa Empirical Roofline Toolkit obteniendo los siguientes resultados:
 
