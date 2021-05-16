@@ -11,7 +11,7 @@ El código realiza simulaciones de propagación de luz, a partir de una fuente p
 
 Las ejecuciones se realizaron sobre una notebook Asus vivobook S14 con las siguiente prestaciones:
 
-``
+```
 	
 	Ubuntu 18.04.5 LTS
 
@@ -23,7 +23,8 @@ Las ejecuciones se realizaron sobre una notebook Asus vivobook S14 con las sigui
 
 	Compiladores: GCC 10.1.0 | CLANG 11.1.0 | ICC 2021.2.0
 
-``
+```
+
 Sobre este equipo se ejecutó el programa Empirical Roofline Toolkit obteniendo los siguientes resultados:
 
 ![Empirical Roofline Toolkit](https://raw.githubusercontent.com/barufa/tiny_mc/lab1/Imagenes/image9.jpg "Grafico ERT con varios hilo")
