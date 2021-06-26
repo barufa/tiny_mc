@@ -4,13 +4,26 @@
 #include <time.h> // time
 #include <omp.h>
 #include <sys/sysinfo.h>
+#include <limits.h>
 
 #ifndef THREADS
 #define THREADS           28
 #endif
 
+#ifndef BLOCK_SIZE
+#define BLOCK_SIZE        128
+#endif
+
+#ifndef PHOTONS_PER_THREAD
+#define PHOTONS_PER_THREAD 256
+#endif
+
+#ifndef REDUCE_SIZE
+#define REDUCE_SIZE       4
+#endif
+
 #ifndef CHUNKS
-#define CHUNKS            2000
+#define CHUNKS            1000
 #endif
 
 #ifndef SCHEDULE
@@ -22,7 +35,7 @@
 #endif
 
 #ifndef PHOTONS
-#define PHOTONS           8388608
+#define PHOTONS           (1 << 25)
 #endif
 
 #ifndef MU_A
@@ -41,10 +54,23 @@
 #define SEED              (time(NULL)) // random seed
 #endif
 
+#ifndef M_PI
+#define M_PI              3.14159265358979323846
+#endif
+
 #ifndef VERBOSE
 static const unsigned verbose = 0;
 #else
 static const unsigned verbose = 1;
 #endif
+
+#define ALBEDO         (MU_S / (MU_S + MU_A))
+#define SHELLS_PER_MFP (1e4 / MICRONS_PER_SHELL / (MU_A + MU_S))
+
+#define FULL_MASK 0xffffffff
+#define CUDA_WARP_SIZE 32
+#define CUDA_WARP_MASK ((CUDA_WARP_SIZE) -1)
+#define CUDA_HALF_WARP_SIZE ((CUDA_WARP_SIZE) / 2)
+#define CUDA_HALF_WARP_MASK ((CUDA_HALF_WARP_SIZE) -1)
 
 #endif //PARAMS_H

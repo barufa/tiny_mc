@@ -7,7 +7,7 @@ ITERATIONS=5
 
 echo "Ejecutando run_fotones.sh"
 
-for cnt_photons in "67108864" "134217728"
+for cnt_photons in "1073741824"
 do
 	make clean
 	make ADD_FLAGS="-DPHOTONS=$cnt_photons"

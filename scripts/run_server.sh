@@ -14,10 +14,13 @@ export OMP_WAIT_POLICY=active
 export OMP_DYNAMIC=false
 export OMP_PROC_BIND=true
 
-#./run_fotones_1.sh
-#./run_fotones_2.sh
-#./run_fotones_3.sh
-#./run_fotones_4.sh
-#./run_schedule.sh
-#./run_threads.sh
+sleep 60
 
+#./scripts/run_block_size.sh
+#./scripts/run_fotones_1.sh
+#./scripts/run_fotones_2.sh
+#./scripts/run_fotones_3.sh
+#./scripts/run_fotones_4.sh
+#./scripts/run_fotones_5.sh
+#./scripts/run_fotones_6.sh
+#./scripts/run_fotones_7.sh

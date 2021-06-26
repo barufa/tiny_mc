@@ -1,12 +1,3 @@
-/* Tiny Monte Carlo by Scott Prahl (http://omlc.ogi.edu)"
- * 1 W Point Source Heating in Infinite Isotropic Scattering Medium
- * http://omlc.ogi.edu/software/mc/tiny_mc.c
- *
- * Adaptado para CP2014, Nicolas Wolovick
- */
-
-#define _XOPEN_SOURCE 500  // M_PI
-
 #include "params.h"
 #include "wtime.h"
 
@@ -18,12 +9,6 @@
 #include <string.h>
 #include <stdint.h>
 #include <immintrin.h>
-
-
-char t1[] = "Tiny Monte Carlo by Scott Prahl (http://omlc.ogi.edu)";
-char t2[] = "1 W Point Source Heating in Infinite Isotropic Scattering Medium";
-char t3[] = "CPU version, adapted for PEAGPGPU by Gustavo Castellano"
-            " and Nicolas Wolovick";
 
 /***
  * Photon
@@ -56,7 +41,7 @@ static inline __m256 _m256_rand(__m256i * _seed)
                              _mm256_set1_ps(4294967296.0f));
 }
 
-static void photon(float (*heat)[2], int photons, float * _seed)
+void photon(float (*heat)[2], int photons, float * _seed)
 {
         float lheat[8], lheat2[8], is_working[8], shellidx[8];
         /* Step 1: Launching a photon packet */
@@ -189,61 +174,24 @@ static void photon(float (*heat)[2], int photons, float * _seed)
                 working = _mm256_load_ps(is_working);
         } while (_mm256_movemask_ps(working) != 0);
 }
-/***
- * Main matter
- ***/
 
-int main(void)
-{
 
-        static float heat[SHELLS][2];
-        static float seed[8];// Avoid buffer overflow
-        if (verbose) { // heading
-                printf("# %s\n# %s\n# %s\n", t1, t2, t3);
-                printf("# Scattering = %8.3f/cm\n", MU_S);
-                printf("# Absorption = %8.3f/cm\n", MU_A);
-                printf("# Photons    = %8d\n#\n", PHOTONS);
-        }
-
-        // configure RNG
-        srand(SEED);
-        for (int i = 0; i < 8; i++) {
-                seed[i] = rand();
-        }
-    #pragma omp parallel for
-        for (int i = 0; i < 8; ++i) {
-                photon(heat, 256, seed);
-        }
-        // first run
-        memset(heat, 0, 2 * sizeof(float) * SHELLS);
-        // start timer
-        double start = wtime();
-        // simulation
-    #pragma omp parallel for firstprivate(seed) num_threads(THREADS) schedule(SCHEDULE) reduction(+:heat[:SHELLS][:2]) default(none)
+void run_cpu_tiny_mc(float (*heat)[2], const unsigned photons){
+    #pragma omp parallel for shared(photons) num_threads(THREADS) schedule(SCHEDULE) reduction(+:heat[:SHELLS][:2]) default(none)
         for (int i = 0; i < CHUNKS; ++i) {
+                float seed[8];
                 for(int j=0; j<8; j++) {
-                        seed[j] *= i+1;
+                        seed[j] *= ((i+1) * 8 + j) * 223;
                 }
-                photon(heat, PHOTONS / CHUNKS, seed);
+                photon(heat, photons / CHUNKS, seed);
         }
-	photon(heat, PHOTONS % CHUNKS, seed);
-        // stop timer
-        double end = wtime();
-        assert(start <= end);
-        double elapsed = (end - start) * 1000.0;
-        if (verbose) {
-                printf("# Radius\tHeat\n");
-                printf("# [microns]\t[W/cm^3]\tError\n");
-                float t = 4.0f * M_PI * powf(MICRONS_PER_SHELL, 3.0f) * PHOTONS / 1e12;
-                for (unsigned int i = 0; i < SHELLS - 1; ++i) {
-                        printf("%6.0f\t%12.5f\t%12.5f\n", i * (float)MICRONS_PER_SHELL,
-                               heat[i][0] / t / (i * i + i + 1.0 / 3.0),
-                               sqrt(heat[i][1] - heat[i][0] * heat[i][0] / PHOTONS) / t / (i * i + i + 1.0f / 3.0f));
-                }
-                printf("# extra\t%12.5f\n", heat[SHELLS - 1][0] / PHOTONS);
-        }
-        printf("+>> %lf ms\n", elapsed);
-        printf("+>>> %lf K photons per second\n", 1e-3 * PHOTONS / (elapsed / 1000.0));
-
-        return 0;
+        float seed[8] = { 223 * (CHUNKS + 0),
+                          223 * (CHUNKS + 1),
+                          223 * (CHUNKS + 2),
+                          223 * (CHUNKS + 3),
+                          223 * (CHUNKS + 4),
+                          223 * (CHUNKS + 5),
+                          223 * (CHUNKS + 6),
+                          223 * (CHUNKS + 7),};
+        photon(heat, photons % CHUNKS, seed);
 }

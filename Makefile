@@ -1,44 +1,35 @@
 .SILENT:
 
 # Compilers
-CC = gcc-10 #clang-11 gcc-10 icc
+CC = gcc-10
 CXX = g++-10
-
+NVCC = nvcc
 
 ADD_FLAGS = 
 
-#Banderas para vectorizacion:
-##-fopt-info-vec: para ver si pudo vectorizar.
-##-fopt-info-vec-missed: para ver que NO pudo vectorizar.
-##-ftree-vectorize
-
 # Flags
-OPT_FLAGS = -O3 -ffast-math -march=native -fopenmp -lpthread#-floop-nest-optimize
-CFLAGS = -std=c11 -Wall -Wextra -Wshadow -Wno-unknown-pragmas -DRAND7 -DVERBOSE -DSEED=223 $(OPT_FLAGS) $(ADD_FLAGS)
+OPT_FLAGS = -O3 -ffast-math -march=native -fopenmp -lpthread -floop-nest-optimize $(ADD_FLAGS)
+CFLAGS = -std=c11 -Wall -Wextra -Wshadow -Wno-unknown-pragmas -flto -DVERBOSE $(OPT_FLAGS)
 LDFLAGS = -lm
 
-# Binary file
-TARGET = tiny_mc
+CU_FLAGS_XCOMP = $(LDFLAGS) $(OPT_FLAGS) `pkg-config --libs --cflags cuda` -DVERBOSE
+CU_FLAGS = -O3 --use_fast_math -arch=sm_75 --compiler-options "$(CU_FLAGS_XCOMP)"
 
 # Files
-C_OBJS_256 =  wtime.h wtime.c params.h tiny_mc_m256.c
-C_OBJS_OMP =  wtime.h wtime.c params.h tiny_mc_omp.c
-C_OBJS_256_OMP =  wtime.h wtime.c params.h tiny_mc_m256_omp.c
+C_OBJS_CPU = wtime.h wtime.c params.h tiny_mc_cpu.c
 
 # Rules
-all: m256 omp m256_omp
+all: cpu gpu both
 
-m256:
-	$(CC) $(CFLAGS) $(LDFLAGS) $(C_OBJS_256) -DM256
-	@mv a.out tiny_mc_m256
+cpu:
+	$(CC) $(CFLAGS) $(LDFLAGS) $(C_OBJS_CPU) -DM256 -o tiny_mc_cpu
 
-m256_omp:
-	$(CC) $(CFLAGS) $(LDFLAGS) $(C_OBJS_256_OMP) -DM256
-	@mv a.out tiny_mc_m256_omp
+gpu:
+	$(NVCC) $(CU_FLAGS) tiny_mc_gpu.cu -o tiny_mc_gpu
 
-omp: 
-	$(CC) $(CFLAGS) $(LDFLAGS) $(C_OBJS_OMP) -DM256
-	@mv a.out tiny_mc_omp
+both:
+	$(CXX) $(CU_FLAGS_XCOMP) -c tiny_mc_both.cpp -o tiny_mc_both.o
+	nvcc $(CU_FLAGS) tiny_mc_kernel.cu tiny_mc_both.o -o tiny_mc_both
 
 clean:
-	rm -f $(TARGET) *.o "ispc/$(TARGET)" tiny_mc_m256_omp tiny_mc_m256 tiny_mc_omp tiny_mc_m128 tiny_mc_ispc *.gch ispc/*.o
+	rm -f *.o tiny_mc_cpu tiny_mc_gpu tiny_mc_both *.gch

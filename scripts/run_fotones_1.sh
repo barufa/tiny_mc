@@ -3,16 +3,15 @@
 FILE="report.out"
 TOTAL_MS=0
 TOTAL_PH=0
-ITERATIONS=10
+ITERATIONS=5
 
-echo "Ejecutando run_fotones_1.sh"
+echo "Ejecutando run_fotones.sh"
 
-for cnt_photons in "16384" "32768" "65536" "131072" "262144" "524288"
+for cnt_photons in "16384" "32768" "65536" "131072" "262144" "524288" "1048576" "2097152"
 do
 	make clean
-	make ADD_FLAGS="-DPHOTONS=$cnt_photons -DREDUCTION -DTHREADS=28"
-
-	for version in "tiny_mc_m256" "tiny_mc_m256_omp" "tiny_mc_omp"
+	make ADD_FLAGS="-DPHOTONS=$cnt_photons"
+	for version in "tiny_mc_cpu" "tiny_mc_gpu" "tiny_mc_both"
 	do
 		TOTAL_MS=0
 		TOTAL_PH=0

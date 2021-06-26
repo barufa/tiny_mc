@@ -3,16 +3,15 @@
 FILE="report.out"
 TOTAL_MS=0
 TOTAL_PH=0
-ITERATIONS=10
+ITERATIONS=5
 
-echo "Ejecutando run_schedule.sh"
+echo "Ejecutando run_fotones.sh"
 
-for sch in guided static dynamic
+for cnt_photons in "2147483647"
 do
 	make clean
-	make ADD_FLAGS="-DSCHEDULE=$sch -DREDUCTION"
-
-	for version in "tiny_mc_m256_omp"
+	make ADD_FLAGS="-DPHOTONS=$cnt_photons"
+	for version in "tiny_mc_cpu" "tiny_mc_gpu" "tiny_mc_both"
 	do
 		TOTAL_MS=0
 		TOTAL_PH=0
@@ -31,7 +30,7 @@ do
 
 		TOTAL_MS=$(echo $TOTAL_MS $ITERATIONS | awk '{printf "%5.3f\n",$1/$2}')
 		TOTAL_PH=$(echo $TOTAL_PH $ITERATIONS | awk '{printf "%5.3f\n",$1/$2}')
-		echo "$sch $version:"
+		echo "$cnt_photons $version:"
 		echo "    >>  TOTAL_MS: $TOTAL_MS"
 		echo "    >>> TOTAL_PH: $TOTAL_PH"
 	done
